@@ -50,6 +50,24 @@ body.dark .upload-zone{background:#1e293b;border-color:#334155}
 body.dark .audit-item{background:#1e293b;border-color:#334155}
 body.dark .collapsible-header{background:#1e293b}
 body.dark .collapsible-header:hover{background:#334155}
+.patient-ctx-bar{background:var(--color-primary-light);border:1px solid var(--color-primary-shadow);border-radius:.875rem;padding:.875rem 1.25rem;display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap;gap:.75rem}
+.patient-ctx-bar.empty{background:#fffbeb;border-color:#fde68a}
+.ctx-avatar{width:2.5rem;height:2.5rem;background:var(--color-primary);color:#fff;border-radius:9999px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.875rem;flex-shrink:0}
+.ctx-info{display:flex;align-items:center;gap:.875rem}
+.ctx-name{font-weight:700;color:var(--color-text-primary)}
+.ctx-meta{font-size:.8rem;color:var(--color-text-secondary);margin-top:.125rem}
+.ctx-actions{display:flex;gap:.5rem;flex-wrap:wrap}
+body.dark .patient-ctx-bar{background:#0c2a3d;border-color:#025e8d55}
+.dashboard-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:1.5rem}
+@media(max-width:768px){.dashboard-grid{grid-template-columns:1fr}}
+.alert-row{display:flex;align-items:center;gap:.875rem;padding:.875rem;border-radius:.75rem;border:1px solid #fecdd3;background:#fef2f2;margin-bottom:.625rem}
+body.dark .alert-row{background:#2d1515;border-color:#7f1d1d}
+.soap-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;padding:1.5rem}
+@media(max-width:768px){.soap-grid{grid-template-columns:1fr}}
+.soap-label{font-weight:700;font-size:.8rem;color:var(--color-primary);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.375rem;display:block}
+.evo-item{display:flex;align-items:flex-start;gap:1rem;padding:1rem 1.25rem;border:1px solid var(--color-border);border-radius:.875rem;background:var(--color-bg-card);margin-bottom:.75rem}
+.evo-num{font-size:1.75rem;font-weight:900;color:var(--color-primary);min-width:2.5rem;text-align:center;line-height:1}
+body.dark .evo-item{background:#1e293b;border-color:#334155}
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{height:100%}
 body{font-family:var(--font-sans);background:var(--color-bg-content);color:var(--color-text-primary);-webkit-font-smoothing:antialiased;transition:background .3s,color .3s}
@@ -263,7 +281,7 @@ body.dark .log-table th{background:#1e293b}
         <button class="menu-toggle" id="menuToggle" onclick="toggleSidebar()">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg>
         </button>
-        <h1 class="page-title" id="pageTitle">Anamnese</h1>
+        <h1 class="page-title" id="pageTitle">Dashboard</h1>
       </div>
       <div class="topbar-right">
         <div class="brand-block">
@@ -292,20 +310,22 @@ body.dark .log-table th{background:#1e293b}
 <script>
 // ===================== DATA =====================
 const DEFAULT_PATIENTS = [
-  {id:'p1',nome:'Maria Silva Santos',nascimento:'1975-03-12',sexo:'Feminino',escolaridade:'Ensino Superior',profissao:'Professora',estadoCivil:'Casada',queixa:'Tristeza profunda, insônia, choro fácil há 3 meses após perda de emprego.',hda:'Paciente refere início dos sintomas após demissão. Relata hipersomnia inicial seguida de insônia, anedonia, isolamento social, ideação passiva de morte sem plano.',hpp:'Episódio depressivo maior em 2015, tratado com sertralina 100mg por 1 ano. Nega tentativas de suicídio.',hf:'Mãe com depressão. Tio materno com TAB.',habitos:'Nega tabagismo. Etilismo social ocasional. Nega outras drogas.',medicacoes:'Sertralina 50mg/dia (iniciado há 2 semanas)',cid:'F32.1',sessoes:8,ultimaSessao:'2026-05-28'},
-  {id:'p2',nome:'João Carlos Pereira',nascimento:'1988-07-22',sexo:'Masculino',escolaridade:'Ensino Médio',profissao:'Motorista',estadoCivil:'Divorciado',queixa:'Vozes que mandam fazer coisas, desconfiança de vizinhos, agitação noturna.',hda:'Familiar relata início há 6 meses com isolamento progressivo e desconfiança. Paciente refere ouvir vozes imperativas, acredita que vizinhos querem lhe prejudicar.',hpp:'Internação psiquiátrica em 2020. Em uso irregular de medicação antipsicótica.',hf:'Pai com esquizofrenia.',habitos:'Tabagismo 1 maço/dia. Nega etilismo atual (ex-usuário de álcool). Cannabis ocasional na adolescência.',medicacoes:'Risperidona 4mg/dia (em uso irregular)',cid:'F20.0',sessoes:14,ultimaSessao:'2026-05-30'},
-  {id:'p3',nome:'Ana Beatriz Oliveira',nascimento:'1995-11-08',sexo:'Feminino',escolaridade:'Ensino Superior Incompleto',profissao:'Estudante',estadoCivil:'Solteira',queixa:'Ataques de pânico frequentes, medo de lugares fechados, evitação de transporte público.',hda:'Paciente descreve crises com palpitação, sudorese, dispneia e sensação de morte iminente. Início após assalto em 2024. Evitação progressiva.',hpp:'Nega episódios anteriores. Acompanhamento psicológico por 6 meses.',hf:'Mãe com TAG. Avó materna com depressão.',habitos:'Nega tabagismo, etilismo e drogas.',medicacoes:'Escitalopram 10mg/dia. Clonazepam 0,5mg SOS.',cid:'F41.0',sessoes:5,ultimaSessao:'2026-06-01'}
+  {id:'p1',nome:'Maria Silva Santos',nascimento:'1975-03-12',sexo:'Feminino',escolaridade:'Ensino Superior',profissao:'Professora',estadoCivil:'Casada',queixa:'Tristeza profunda, insônia, choro fácil há 3 meses após perda de emprego.',hda:'Paciente refere início dos sintomas após demissão. Relata hipersomnia inicial seguida de insônia, anedonia, isolamento social, ideação passiva de morte sem plano.',hpp:'Episódio depressivo maior em 2015, tratado com sertralina 100mg por 1 ano. Nega tentativas de suicídio.',hf:'Mãe com depressão. Tio materno com TAB.',habitos:'Nega tabagismo. Etilismo social ocasional. Nega outras drogas.',medicacoes:'Sertralina 50mg/dia (iniciado há 2 semanas)',cid:'F32.1',sessoes:8,ultimaSessao:'2026-05-28',
+    fenomenologia:{},escalas:{hama:{},hamd:{},gaf:null,panss:{}},diagnosticos:[{cid:'F32.1',dsm:'Transtorno depressivo maior, episódio único, moderado',esp:'Moderado',notas:'Quadro depressivo reativo à perda laboral.'}],pts:{metas:[{texto:'Reduzir sintomas depressivos em 50% em 8 semanas',status:'Em andamento'},{texto:'Retomar atividade laboral',status:'Em andamento'}],medicamentos:[{nome:'Sertralina',dose:'50mg',freq:'1x/dia matinal'}],terapia:'TCC — Terapia Cognitivo-Comportamental',freq:'1x por semana',modal:'Individual',proximaConsulta:'2026-06-10'},
+    evolucoes:[{id:'ev_p1_1',data:'2026-05-21',sessaoNum:7,humor:'Disfórico',risco:'Baixo',S:'Refere melhora parcial do sono. Ainda anedonia. Choro menos frequente.',O:'Aspecto cuidado, eutímica em discurso, sem ideação suicida ativa.',A:'Resposta inicial à sertralina. Manter dose.',P:'Manter sertralina 50mg. Reforçar ativação comportamental.',criadoEm:'2026-05-21T10:00:00Z'},{id:'ev_p1_2',data:'2026-05-28',sessaoNum:8,humor:'Eutímico',risco:'Baixo',S:'Sente-se mais animada. Retomou caminhadas.',O:'Discurso mais fluido. Sorriso espontâneo presente.',A:'Boa evolução clínica. Resposta terapêutica adequada.',P:'Manter conduta. Reavaliar em 2 semanas.',criadoEm:'2026-05-28T10:00:00Z'}]},
+  {id:'p2',nome:'João Carlos Pereira',nascimento:'1988-07-22',sexo:'Masculino',escolaridade:'Ensino Médio',profissao:'Motorista',estadoCivil:'Divorciado',queixa:'Vozes que mandam fazer coisas, desconfiança de vizinhos, agitação noturna.',hda:'Familiar relata início há 6 meses com isolamento progressivo e desconfiança. Paciente refere ouvir vozes imperativas, acredita que vizinhos querem lhe prejudicar.',hpp:'Internação psiquiátrica em 2020. Em uso irregular de medicação antipsicótica.',hf:'Pai com esquizofrenia.',habitos:'Tabagismo 1 maço/dia. Nega etilismo atual (ex-usuário de álcool). Cannabis ocasional na adolescência.',medicacoes:'Risperidona 4mg/dia (em uso irregular)',cid:'F20.0',sessoes:14,ultimaSessao:'2026-05-30',
+    fenomenologia:{consciencia:'Alerta',sensopercep:['Alucinação auditiva'],pens_cont:['Ideação delirante persecutória'],humor:'Disfórico',insight:'Ausente'},escalas:{hama:{},hamd:{},gaf:35,panss:{}},diagnosticos:[{cid:'F20.0',dsm:'Esquizofrenia paranoide',esp:'Episódio único',notas:'Sintomas positivos predominantes. Baixa adesão medicamentosa.'}],pts:{metas:[{texto:'Garantir adesão medicamentosa',status:'Em andamento'},{texto:'Reduzir sintomas psicóticos',status:'Em andamento'}],medicamentos:[{nome:'Risperidona',dose:'4mg',freq:'1x/dia noturno'}],terapia:'Psicoeducação',freq:'2x por semana',modal:'Individual',proximaConsulta:'2026-06-06'},
+    evolucoes:[{id:'ev_p2_1',data:'2026-05-30',sessaoNum:14,humor:'Disfórico',risco:'Alto',S:'Refere que vozes continuam. Não tomou medicação por 3 dias.',O:'Desorganização do discurso. Suspicácia evidente.',A:'Recaída por má adesão. Risco de auto/heteroagressão.',P:'Iniciar acompanhamento domiciliar. Considerar internação se piora. Risperidona supervisionada.',criadoEm:'2026-05-30T15:00:00Z'}]},
+  {id:'p3',nome:'Ana Beatriz Oliveira',nascimento:'1995-11-08',sexo:'Feminino',escolaridade:'Ensino Superior Incompleto',profissao:'Estudante',estadoCivil:'Solteira',queixa:'Ataques de pânico frequentes, medo de lugares fechados, evitação de transporte público.',hda:'Paciente descreve crises com palpitação, sudorese, dispneia e sensação de morte iminente. Início após assalto em 2024. Evitação progressiva.',hpp:'Nega episódios anteriores. Acompanhamento psicológico por 6 meses.',hf:'Mãe com TAG. Avó materna com depressão.',habitos:'Nega tabagismo, etilismo e drogas.',medicacoes:'Escitalopram 10mg/dia. Clonazepam 0,5mg SOS.',cid:'F41.0',sessoes:5,ultimaSessao:'2026-06-01',
+    fenomenologia:{},escalas:{hama:{},hamd:{},gaf:65,panss:{}},diagnosticos:[{cid:'F41.0',dsm:'Transtorno de pânico',esp:'Sem agorafobia',notas:'Início pós-trauma. Boa resposta a ISRS.'}],pts:{metas:[{texto:'Reduzir frequência de crises de pânico',status:'Em andamento'}],medicamentos:[{nome:'Escitalopram',dose:'10mg',freq:'1x/dia'},{nome:'Clonazepam',dose:'0,5mg',freq:'SOS'}],terapia:'TCC — Terapia Cognitivo-Comportamental',freq:'1x por semana',modal:'Individual',proximaConsulta:'2026-06-08'},
+    evolucoes:[{id:'ev_p3_1',data:'2026-06-01',sessaoNum:5,humor:'Ansioso',risco:'Médio',S:'Teve 2 crises na semana. Conseguiu pegar ônibus uma vez.',O:'Ansiosa em sala. Boa capacidade de insight.',A:'Boa progressão na exposição gradual.',P:'Continuar exposição progressiva. Manter medicação.',criadoEm:'2026-06-01T11:00:00Z'}]}
 ];
 
 let state = {
-  activeSection: 'anamnese',
+  activeSection: 'dashboard',
   activePatientId: null,
   darkMode: false,
   patients: [],
-  fenomenologia: {},
-  escalas: {hamA:{},hamD:{},gaf:50,panss:{}},
-  diagnosticos: [],
-  pts: {metas:[],medicamentos:[],encaminhamentos:[],proximaConsulta:''},
   chatMessages: [
     {role:'assistant',text:'Olá! Sou o Psi Assistente, seu auxiliar clínico baseado em IA. Posso ajudar com diagnósticos diferenciais, revisão de prescrições, critérios diagnósticos do DSM-5/CID-10 e psicoeducação. Como posso ajudar hoje?',time:'09:00'},
     {role:'user',text:'Tenho uma paciente com episódios de humor, grandiosidade, diminuição do sono e gastos excessivos. Qual seria o diagnóstico diferencial?',time:'09:01'},
@@ -330,7 +350,26 @@ function loadState(){
     const saved=localStorage.getItem('drpsi_state');
     if(saved){const p=JSON.parse(saved);state=Object.assign(state,p);}
     if(!state.patients||state.patients.length===0)state.patients=DEFAULT_PATIENTS;
-  }catch(e){state.patients=DEFAULT_PATIENTS;}
+    migratePatients();
+  }catch(e){state.patients=DEFAULT_PATIENTS;migratePatients();}
+}
+function migratePatients(){
+  state.patients.forEach(p=>{
+    if(!p.fenomenologia)p.fenomenologia={};
+    if(!p.escalas)p.escalas={hama:{},hamd:{},gaf:null,panss:{}};
+    if(!p.diagnosticos)p.diagnosticos=[];
+    if(!p.pts)p.pts={metas:[],medicamentos:[],terapia:'',freq:'',modal:'',proximaConsulta:''};
+    if(!p.evolucoes)p.evolucoes=[];
+  });
+}
+function getPatient(id){return state.patients.find(p=>p.id===(id||state.activePatientId));}
+function defaultEscalas(){return{hama:{},hamd:{},gaf:null,panss:{}};}
+function defaultPTS(){return{metas:[],medicamentos:[],terapia:'',freq:'',modal:'',proximaConsulta:''};}
+function addAuditEntry(acao){
+  if(!state.auditLog)state.auditLog=[];
+  const now=new Date();
+  state.auditLog.unshift({data:now.toLocaleDateString('pt-BR')+' '+now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}),usuario:'Dr. Ricardo',acao,ip:'192.168.1.1'});
+  if(state.auditLog.length>200)state.auditLog.length=200;
 }
 function saveState(){
   try{localStorage.setItem('drpsi_state',JSON.stringify(state));}catch(e){}
@@ -339,7 +378,9 @@ loadState();
 
 // ===================== NAV =====================
 const NAV_ITEMS=[
+  {id:'dashboard',label:'Dashboard',svg:'<rect width="7" height="9" x="3" y="3" rx="1"></rect><rect width="7" height="5" x="14" y="3" rx="1"></rect><rect width="7" height="9" x="14" y="12" rx="1"></rect><rect width="7" height="5" x="3" y="16" rx="1"></rect>'},
   {id:'anamnese',label:'Anamnese',svg:'<circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>'},
+  {id:'evolucao',label:'Evolução',svg:'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"></path><path d="M14 2v6h6"></path><path d="M12 18v-6"></path><path d="M9 15h6"></path>'},
   {id:'fenomenologia',label:'Fenomenologia',svg:'<path d="M12 7v14"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path>'},
   {id:'sumula',label:'Súmula Geral',svg:'<rect width="8" height="4" x="8" y="2" rx="1" ry="1"></rect><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><path d="M12 11h4"></path><path d="M12 16h4"></path><path d="M8 11h.01"></path><path d="M8 16h.01"></path>'},
   {id:'escalas',label:'Escalas',svg:'<path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.41 2.41 0 0 1 0-3.4l2.6-2.6a2.41 2.41 0 0 1 3.4 0Z"></path><path d="m14.5 12.5 2-2"></path><path d="m11.5 9.5 2-2"></path><path d="m8.5 6.5 2-2"></path><path d="m17.5 15.5 2-2"></path>'},
@@ -383,8 +424,9 @@ function buildNav(){
 }
 
 function navigate(id){
+  const CLINICAL=['fenomenologia','escalas','diagnostico','pts','evolucao','relatorios'];
   state.activeSection=id;
-  state.activePatientId=null;
+  if(!CLINICAL.includes(id))state.activePatientId=null;
   const item=NAV_ITEMS.find(x=>x.id===id);
   document.getElementById('pageTitle').textContent=item?item.label:(id==='auditlog_view'?'Log de Auditoria':'');
   buildNav();
@@ -424,7 +466,9 @@ function renderSection(){
   div.className='section-view';
   c.appendChild(div);
   switch(state.activeSection){
+    case'dashboard':renderDashboard(div);break;
     case'anamnese':renderAnamnese(div);break;
+    case'evolucao':renderEvolucao(div);break;
     case'fenomenologia':renderFenomenologia(div);break;
     case'sumula':renderSumula(div);break;
     case'escalas':renderEscalas(div);break;
@@ -436,6 +480,186 @@ function renderSection(){
     case'auditlog_view':renderAuditLog(div);break;
     default:div.innerHTML='<div class="empty-state">Seção em desenvolvimento.</div>';
   }
+}
+
+// ===================== PATIENT CONTEXT BAR =====================
+function renderPatientCtxBar(container){
+  const p=getPatient();
+  const div=document.createElement('div');
+  if(!p){
+    div.className='patient-ctx-bar empty';
+    div.innerHTML=`<span style="color:#92400e;font-weight:600">⚠ Nenhum paciente selecionado. Selecione um paciente para registrar dados clínicos.</span><button class="btn btn-primary btn-sm" onclick="navigate('anamnese')">Selecionar Paciente</button>`;
+    container.appendChild(div);
+    return false;
+  }
+  const initials=p.nome.split(' ').slice(0,2).map(w=>w[0]||'').join('').toUpperCase();
+  div.className='patient-ctx-bar';
+  div.innerHTML=`<div class="ctx-info"><div class="ctx-avatar">${initials}</div><div><div class="ctx-name">${p.nome}</div><div class="ctx-meta">${calcAge(p.nascimento)} anos · ${p.sexo} · <strong>${p.cid}</strong> · ${p.sessoes} sessões</div></div></div><div class="ctx-actions"><button class="btn btn-outline btn-sm" onclick="navigate('anamnese')">Trocar Paciente</button><button class="btn btn-outline btn-sm" onclick="openPatientFromCtx('${p.id}')">Ver Prontuário</button></div>`;
+  container.appendChild(div);
+  return true;
+}
+function openPatientFromCtx(id){state.activePatientId=id;state.activeSection='anamnese';buildNav();renderSection();}
+
+// ===================== DASHBOARD =====================
+function renderDashboard(container){
+  const now=new Date();
+  const today=now.toISOString().split('T')[0];
+  const thisMonth=now.getFullYear()+'-'+(String(now.getMonth()+1).padStart(2,'0'));
+  const totalSessoes=state.patients.reduce((a,p)=>a+(p.evolucoes||[]).filter(e=>e.data&&e.data.startsWith(thisMonth)).length,0);
+  const altoRisco=state.patients.filter(p=>{
+    const evos=p.evolucoes||[];const last=evos[evos.length-1];
+    return last&&(last.risco==='Alto'||last.risco==='Iminente');
+  });
+  const proximasConsultas=state.patients.filter(p=>p.pts&&p.pts.proximaConsulta&&p.pts.proximaConsulta>=today).sort((a,b)=>a.pts.proximaConsulta.localeCompare(b.pts.proximaConsulta));
+  const recentPatients=[...state.patients].sort((a,b)=>(b.ultimaSessao||'').localeCompare(a.ultimaSessao||'')).slice(0,5);
+
+  container.innerHTML=`
+  <div class="content-head"><h2 class="content-title">Dashboard</h2>
+    <button class="btn btn-primary" onclick="navigate('anamnese')">${icon('<path d="M5 12h14"></path><path d="M12 5v14"></path>')} Novo Paciente</button>
+  </div>
+  <div class="summary-grid">
+    <div class="stat-card"><span class="stat-value">${state.patients.length}</span><span class="stat-label">Pacientes cadastrados</span></div>
+    <div class="stat-card"><span class="stat-value">${totalSessoes}</span><span class="stat-label">Sessões este mês</span></div>
+    <div class="stat-card"><span class="stat-value" style="color:${altoRisco.length>0?'#ef4444':'#10b981'}">${altoRisco.length}</span><span class="stat-label">Pacientes de alto risco</span></div>
+    <div class="stat-card"><span class="stat-value">${proximasConsultas.length}</span><span class="stat-label">Consultas agendadas</span></div>
+  </div>
+  <div class="section-panel"><div style="padding:1.5rem">
+    <div class="section-panel-title">Pacientes Recentes</div>
+    ${recentPatients.length===0?'<div class="empty-state">Nenhum paciente cadastrado.</div>':recentPatients.map(p=>`
+      <div class="pts-row">
+        <div style="flex:1;cursor:pointer" onclick="openPatientFromCtx('${p.id}')"><div style="font-weight:600">${p.nome}</div><div style="font-size:.8rem;color:var(--color-text-secondary)">${calcAge(p.nascimento)} anos · Última sessão: ${fmtDate(p.ultimaSessao)}</div></div>
+        <span class="badge badge-primary">${p.cid}</span>
+        <button class="btn btn-outline btn-sm" onclick="state.activePatientId='${p.id}';navigate('evolucao')">Evolução</button>
+      </div>`).join('')}
+  </div></div>
+  <div class="dashboard-grid">
+    <div class="section-panel"><div style="padding:1.5rem">
+      <div class="section-panel-title" style="color:#ef4444">⚠ Alertas de Risco</div>
+      ${altoRisco.length===0?'<div class="empty-state" style="padding:2rem;color:#10b981">✓ Nenhum alerta crítico</div>':altoRisco.map(p=>{
+        const last=(p.evolucoes||[]).slice(-1)[0];
+        return`<div class="alert-row"><div style="flex:1"><div style="font-weight:600">${p.nome}</div><div style="font-size:.8rem;color:var(--color-text-secondary)">Última sessão: ${fmtDate(last.data)}</div></div><span class="badge badge-error">${last.risco}</span><button class="btn btn-sm btn-outline" onclick="state.activePatientId='${p.id}';navigate('evolucao')">Ver</button></div>`;
+      }).join('')}
+    </div></div>
+    <div class="section-panel"><div style="padding:1.5rem">
+      <div class="section-panel-title">📅 Próximas Consultas</div>
+      ${proximasConsultas.length===0?'<div class="empty-state" style="padding:2rem">Nenhuma consulta agendada</div>':proximasConsultas.map(p=>`
+        <div class="pts-row"><div style="flex:1"><div style="font-weight:600">${p.nome}</div><div style="font-size:.8rem;color:var(--color-text-secondary)">${p.cid}</div></div><span style="font-size:.875rem;color:var(--color-primary);font-weight:700">${fmtDate(p.pts.proximaConsulta)}</span><button class="btn btn-sm btn-outline" onclick="state.activePatientId='${p.id}';navigate('pts')">PTS</button></div>`).join('')}
+    </div></div>
+  </div>`;
+}
+
+// ===================== EVOLUÇÃO (SOAP) =====================
+function renderEvolucao(container){
+  if(!renderPatientCtxBar(container))return;
+  const p=getPatient();
+  if(!p.evolucoes)p.evolucoes=[];
+  const evos=[...p.evolucoes].reverse();
+  const head=document.createElement('div');
+  head.innerHTML=`<div class="content-head"><h2 class="content-title">Evolução Clínica</h2><button class="btn btn-primary" onclick="renderEvolucaoForm()">+ Nova Sessão</button></div>`;
+  container.appendChild(head);
+  if(evos.length===0){
+    const empty=document.createElement('div');
+    empty.className='empty-state';
+    empty.textContent='Nenhuma evolução registrada. Clique em "Nova Sessão" para iniciar.';
+    container.appendChild(empty);
+    return;
+  }
+  const list=document.createElement('div');
+  list.innerHTML=evos.map(e=>{
+    const humorBadge=e.humor==='Eutímico'?'badge-success':(e.humor==='Eufórico'||e.humor==='Expansivo'||e.humor==='Irritável')?'badge-warning':'badge-gray';
+    const riscoBadge=e.risco==='Baixo'?'badge-success':e.risco==='Médio'?'badge-warning':'badge-error';
+    return`<div class="evo-item">
+      <div class="evo-num">#${e.sessaoNum}</div>
+      <div style="flex:1">
+        <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.5rem;flex-wrap:wrap">
+          <span style="font-weight:700">${fmtDate(e.data)}</span>
+          <span class="badge ${humorBadge}">${e.humor}</span>
+          <span class="badge ${riscoBadge}">Risco: ${e.risco}</span>
+        </div>
+        <div style="font-size:.875rem;color:var(--color-text-secondary);line-height:1.5"><strong>A:</strong> ${(e.A||'—').substring(0,140)}${(e.A||'').length>140?'...':''}</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:.375rem">
+        <button class="btn btn-outline btn-sm" onclick="renderEvolucaoForm('${e.id}')">Editar</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteEvolucao('${p.id}','${e.id}')">−</button>
+      </div>
+    </div>`;
+  }).join('');
+  container.appendChild(list);
+}
+
+function renderEvolucaoForm(evoId){
+  const p=getPatient();if(!p)return;
+  const evo=evoId?(p.evolucoes||[]).find(e=>e.id===evoId):null;
+  const today=new Date().toISOString().split('T')[0];
+  const nextSessao=(p.sessoes||0)+1;
+  const c=document.getElementById('content');
+  c.innerHTML='';
+  const div=document.createElement('div');div.className='section-view';
+  const humorOpts=['Eutímico','Eufórico','Disfórico','Irritável','Ansioso','Lábil','Expansivo'];
+  const riscoOpts=['Baixo','Médio','Alto','Iminente'];
+  div.innerHTML=`
+    <div class="content-head">
+      <button class="btn btn-outline" onclick="navigate('evolucao')">← Voltar</button>
+      <h2 class="content-title">${evo?'Editar Evolução':'Nova Sessão'} — ${p.nome}</h2>
+    </div>
+    <div class="section-panel"><div style="padding:1.5rem">
+      <div class="form-grid">
+        <div class="form-group"><label class="form-label required">Data</label><input class="form-input" id="ev_data" type="date" value="${evo?evo.data:today}"></div>
+        <div class="form-group"><label class="form-label">Nº da Sessão</label><input class="form-input" id="ev_sessao" type="number" value="${evo?evo.sessaoNum:nextSessao}"></div>
+        <div class="form-group"><label class="form-label">Humor</label>
+          <select class="form-select" id="ev_humor">${humorOpts.map(h=>`<option ${(evo?evo.humor:'Eutímico')===h?'selected':''}>${h}</option>`).join('')}</select>
+        </div>
+        <div class="form-group"><label class="form-label">Nível de Risco</label>
+          <select class="form-select" id="ev_risco">${riscoOpts.map(r=>`<option ${(evo?evo.risco:'Baixo')===r?'selected':''}>${r}</option>`).join('')}</select>
+        </div>
+      </div>
+    </div></div>
+    <div class="section-panel"><div class="soap-grid">
+      <div><label class="soap-label">S — Subjetivo</label><textarea class="form-textarea" id="ev_S" rows="6" placeholder="Relato do paciente, queixas, sentimentos...">${evo?evo.S||'':''}</textarea></div>
+      <div><label class="soap-label">O — Objetivo</label><textarea class="form-textarea" id="ev_O" rows="6" placeholder="Exame do estado mental, observações clínicas...">${evo?evo.O||'':''}</textarea></div>
+      <div><label class="soap-label">A — Avaliação</label><textarea class="form-textarea" id="ev_A" rows="6" placeholder="Impressão clínica, hipóteses diagnósticas...">${evo?evo.A||'':''}</textarea></div>
+      <div><label class="soap-label">P — Plano</label><textarea class="form-textarea" id="ev_P" rows="6" placeholder="Condutas, ajuste de medicação, tarefas terapêuticas...">${evo?evo.P||'':''}</textarea></div>
+    </div></div>
+    <div style="text-align:right;margin-bottom:2rem">
+      <button class="btn btn-primary" onclick="saveEvolucao('${p.id}','${evoId||''}')">
+        ${icon('<path d="M20 6 9 17l-5-5"></path>')} Salvar Evolução
+      </button>
+    </div>`;
+  c.appendChild(div);
+}
+
+function saveEvolucao(patientId,evoId){
+  const p=getPatient(patientId);if(!p)return;
+  if(!p.evolucoes)p.evolucoes=[];
+  const data=document.getElementById('ev_data').value;
+  if(!data){toast('Data é obrigatória.','error');return;}
+  const entry={
+    id:evoId||('ev_'+Date.now()),
+    data,
+    sessaoNum:parseInt(document.getElementById('ev_sessao').value)||1,
+    humor:document.getElementById('ev_humor').value,
+    risco:document.getElementById('ev_risco').value,
+    S:document.getElementById('ev_S').value,
+    O:document.getElementById('ev_O').value,
+    A:document.getElementById('ev_A').value,
+    P:document.getElementById('ev_P').value,
+    criadoEm:new Date().toISOString()
+  };
+  if(evoId){const i=p.evolucoes.findIndex(e=>e.id===evoId);if(i>-1)p.evolucoes[i]=entry;}
+  else{p.evolucoes.push(entry);p.sessoes=(p.sessoes||0)+1;p.ultimaSessao=data;}
+  addAuditEntry(`Evolução salva — ${p.nome} — Sessão #${entry.sessaoNum}`);
+  saveState();
+  toast('Evolução salva!');
+  navigate('evolucao');
+}
+
+function deleteEvolucao(patientId,evoId){
+  if(!confirm('Excluir esta evolução?'))return;
+  const p=getPatient(patientId);if(!p)return;
+  p.evolucoes=(p.evolucoes||[]).filter(e=>e.id!==evoId);
+  saveState();
+  toast('Evolução removida.','info');
+  navigate('evolucao');
 }
 
 // ===================== ANAMNESE =====================
@@ -624,6 +848,9 @@ const FENO_SECTIONS=[
 ];
 
 function renderFenomenologia(container){
+  if(!renderPatientCtxBar(container))return;
+  const p=getPatient();
+  if(!p.fenomenologia)p.fenomenologia={};
   let html=`<div class="content-head"><h2 class="content-title">Exame do Estado Mental</h2></div>`;
   html+=FENO_SECTIONS.map(s=>`
     <div class="section-panel collapsible open" id="coll_${s.id}">
@@ -646,7 +873,7 @@ function renderFenomenologia(container){
     <div class="section-panel">
       <div style="padding:1.5rem">
         <div class="section-panel-title">Observações Clínicas</div>
-        <textarea class="form-textarea" id="feno_obs" rows="4" placeholder="Observações gerais do exame...">${state.fenomenologia.obs||''}</textarea>
+        <textarea class="form-textarea" id="feno_obs" rows="4" placeholder="Observações gerais do exame...">${p.fenomenologia.obs||''}</textarea>
         <div style="text-align:right;margin-top:1rem">
           <button class="btn btn-primary" onclick="saveFeno()">
             ${icon('<path d="M20 6 9 17l-5-5"></path>')} Salvar Exame
@@ -654,24 +881,31 @@ function renderFenomenologia(container){
         </div>
       </div>
     </div>`;
-  container.innerHTML=html;
+  const div=document.createElement('div');
+  div.innerHTML=html;
+  while(div.firstChild)container.appendChild(div.firstChild);
 }
 
 function getFenoVal(sec,opt,type){
-  if(!state.fenomenologia[sec])return false;
-  if(type==='radio')return state.fenomenologia[sec]===opt;
-  return Array.isArray(state.fenomenologia[sec])&&state.fenomenologia[sec].includes(opt);
+  const p=getPatient();if(!p||!p.fenomenologia[sec])return false;
+  if(type==='radio')return p.fenomenologia[sec]===opt;
+  return Array.isArray(p.fenomenologia[sec])&&p.fenomenologia[sec].includes(opt);
 }
 function setFeno(sec,opt,type,checked){
-  if(type==='radio'){state.fenomenologia[sec]=opt;}
+  const p=getPatient();if(!p)return;
+  if(!p.fenomenologia)p.fenomenologia={};
+  if(type==='radio'){p.fenomenologia[sec]=opt;}
   else{
-    if(!Array.isArray(state.fenomenologia[sec]))state.fenomenologia[sec]=[];
-    if(checked)state.fenomenologia[sec].push(opt);
-    else state.fenomenologia[sec]=state.fenomenologia[sec].filter(x=>x!==opt);
+    if(!Array.isArray(p.fenomenologia[sec]))p.fenomenologia[sec]=[];
+    if(checked)p.fenomenologia[sec].push(opt);
+    else p.fenomenologia[sec]=p.fenomenologia[sec].filter(x=>x!==opt);
   }
 }
 function saveFeno(){
-  state.fenomenologia.obs=document.getElementById('feno_obs').value;
+  const p=getPatient();if(!p){toast('Selecione um paciente.','error');return;}
+  if(!p.fenomenologia)p.fenomenologia={};
+  p.fenomenologia.obs=document.getElementById('feno_obs').value;
+  addAuditEntry(`Fenomenologia salva — ${p.nome}`);
   saveState();
   toast('Exame fenomenológico salvo!');
 }
@@ -697,9 +931,9 @@ function renderSumula(container){
     </div>
     <div class="summary-grid">
       <div class="stat-card"><span class="stat-value">${state.patients.length}</span><span class="stat-label">Pacientes cadastrados</span></div>
-      <div class="stat-card"><span class="stat-value">${state.patients.reduce((a,p)=>a+p.sessoes,0)}</span><span class="stat-label">Total de sessões</span></div>
-      <div class="stat-card"><span class="stat-value">${Object.keys(state.fenomenologia).filter(k=>k!=='obs').length}</span><span class="stat-label">Áreas fenomenológicas avaliadas</span></div>
-      <div class="stat-card"><span class="stat-value">${state.pts.metas.length}</span><span class="stat-label">Metas terapêuticas ativas</span></div>
+      <div class="stat-card"><span class="stat-value">${state.patients.reduce((a,p)=>a+(p.sessoes||0),0)}</span><span class="stat-label">Total de sessões</span></div>
+      <div class="stat-card"><span class="stat-value">${state.patients.reduce((a,p)=>a+Object.keys(p.fenomenologia||{}).filter(k=>k!=='obs').length,0)}</span><span class="stat-label">Áreas fenomenológicas avaliadas</span></div>
+      <div class="stat-card"><span class="stat-value">${state.patients.reduce((a,p)=>a+((p.pts&&p.pts.metas)||[]).length,0)}</span><span class="stat-label">Metas terapêuticas ativas</span></div>
     </div>
     ${state.patients.map(pt=>`
     <div class="section-panel" style="margin-bottom:1rem">
@@ -759,10 +993,13 @@ const HAM_D=[
 ];
 
 let activeScale='hama';
-let scaleScores={hama:{},hamd:{},gaf:null,panss:{}};
 
 function renderEscalas(container){
-  container.innerHTML=`
+  if(!renderPatientCtxBar(container))return;
+  const p=getPatient();
+  if(!p.escalas)p.escalas=defaultEscalas();
+  const div=document.createElement('div');
+  div.innerHTML=`
     <div class="content-head"><h2 class="content-title">Escalas Clínicas</h2></div>
     <div class="tabs">
       <button class="tab-btn ${activeScale==='hama'?'active':''}" onclick="switchScale('hama',this)">HAM-A</button>
@@ -771,7 +1008,27 @@ function renderEscalas(container){
       <button class="tab-btn ${activeScale==='panss'?'active':''}" onclick="switchScale('panss',this)">PANSS (breve)</button>
     </div>
     <div id="scaleContent"></div>`;
+  while(div.firstChild)container.appendChild(div.firstChild);
   renderScaleContent();
+}
+function setScaleScore(key,idx,val){
+  const p=getPatient();if(!p)return;
+  if(!p.escalas)p.escalas=defaultEscalas();
+  if(!p.escalas[key])p.escalas[key]={};
+  p.escalas[key][idx]=val;
+  renderScaleContent();
+}
+function setGAF(val){
+  const p=getPatient();if(!p)return;
+  if(!p.escalas)p.escalas=defaultEscalas();
+  p.escalas.gaf=val;
+  renderScaleContent();
+}
+function saveScale(key){
+  const p=getPatient();if(!p)return;
+  addAuditEntry(`Escala ${key.toUpperCase()} salva — ${p.nome}`);
+  saveState();
+  toast(`Escala ${key.toUpperCase()} salva!`,'success');
 }
 
 function switchScale(id,btn){
@@ -791,7 +1048,8 @@ function renderScaleContent(){
 }
 
 function calcScaleScore(key){
-  const scores=scaleScores[key]||{};
+  const p=getPatient();
+  const scores=(p&&p.escalas&&p.escalas[key])||{};
   return Object.values(scores).reduce((a,v)=>a+(parseInt(v)||0),0);
 }
 function getInterpretation(score,thresholds,labels){
@@ -801,6 +1059,8 @@ function getInterpretation(score,thresholds,labels){
 const BADGE_COLORS=['badge-success','badge-success','badge-warning','badge-error','badge-error'];
 
 function renderHamScale(key,items,title,max,thresh,labels){
+  const p=getPatient();
+  const scores=(p&&p.escalas&&p.escalas[key])||{};
   const score=calcScaleScore(key);
   const interp=getInterpretation(score,thresh,labels);
   return`
@@ -816,19 +1076,20 @@ function renderHamScale(key,items,title,max,thresh,labels){
       <div class="scale-options">
         ${[0,1,2,3,4].map(v=>`
           <label class="scale-opt">
-            <input type="radio" name="${key}_${i}" value="${v}" ${(scaleScores[key]||{})[i]==v?'checked':''} onchange="scaleScores['${key}'][${i}]=${v};document.getElementById('scaleContent').innerHTML=window['renderHamScale']('${key}',${key==='hama'?'HAM_A':'HAM_D'},'${title}',${max},[${thresh}],[${labels.map(l=>`'${l}'`)}])">
+            <input type="radio" name="${key}_${i}" value="${v}" ${scores[i]==v?'checked':''} onchange="setScaleScore('${key}',${i},${v})">
             <span>${v} — ${['Ausente','Leve','Moderado','Grave','Muito grave'][v]}</span>
           </label>`).join('')}
       </div>
     </div>`).join('')}
     <div style="text-align:right;margin-top:1rem">
-      <button class="btn btn-primary" onclick="toast('Escala ${key.toUpperCase()} salva! Pontuação: ${score}','success')">Salvar Escala</button>
+      <button class="btn btn-primary" onclick="saveScale('${key}')">Salvar Escala</button>
     </div>`;
 }
 
 function renderGAF(){
-  const val=scaleScores.gaf||70;
-  let interp=val>=91?'Funcionamento superior':val>=81?'Sintomas mínimos':val>=71?'Sintomas leves':val>=61?'Sintomas moderados':val>=51?'Sintomas graves':val>=41?'Algum prejuízo no teste de realidade':val>=31?'Comportamento influenciado por delírios':val>=21?'Perigo de machucar a si ou outros':val>=11?'Perigo persistente':' Informação inadequada';
+  const p=getPatient();
+  const val=(p&&p.escalas&&p.escalas.gaf)||70;
+  let interp=val>=91?'Funcionamento superior':val>=81?'Sintomas mínimos':val>=71?'Sintomas leves':val>=61?'Sintomas moderados':val>=51?'Sintomas graves':val>=41?'Algum prejuízo no teste de realidade':val>=31?'Comportamento influenciado por delírios':val>=21?'Perigo de machucar a si ou outros':val>=11?'Perigo persistente':'Informação inadequada';
   return`
     <div class="scale-score-box">
       <div class="scale-score-num">${val}</div>
@@ -838,9 +1099,9 @@ function renderGAF(){
     <div class="section-panel"><div style="padding:1.5rem">
       <div class="section-panel-title">Pontuação GAF</div>
       <p style="font-size:.9rem;color:var(--color-text-secondary);margin-bottom:1rem">Avalie o funcionamento geral do paciente. 100 = funcionamento ótimo; 1 = prejuízo extremo.</p>
-      <input type="range" min="1" max="100" value="${val}" style="width:100%;accent-color:var(--color-primary)" oninput="scaleScores.gaf=parseInt(this.value);document.getElementById('scaleContent').innerHTML=window.renderGAF()">
+      <input type="range" min="1" max="100" value="${val}" style="width:100%;accent-color:var(--color-primary)" oninput="setGAF(parseInt(this.value))">
       <div style="display:flex;justify-content:space-between;font-size:.8rem;color:var(--color-text-muted);margin-top:.5rem"><span>1 (Grave)</span><span>50</span><span>100 (Ótimo)</span></div>
-      <div style="text-align:right;margin-top:1rem"><button class="btn btn-primary" onclick="toast('GAF salvo: ${val}','success')">Salvar GAF</button></div>
+      <div style="text-align:right;margin-top:1rem"><button class="btn btn-primary" onclick="saveScale('gaf')">Salvar GAF</button></div>
     </div></div>`;
 }
 
@@ -853,6 +1114,8 @@ const PANSS_ITEMS=[
 ];
 
 function renderPANSS(){
+  const p=getPatient();
+  const scores=(p&&p.escalas&&p.escalas.panss)||{};
   const score=calcScaleScore('panss');
   return`
     <div class="scale-score-box">
@@ -866,16 +1129,13 @@ function renderPANSS(){
       <div class="scale-options">
         ${[1,2,3,4,5,6,7].map(v=>`
           <label class="scale-opt">
-            <input type="radio" name="panss_${i}" value="${v}" ${(scaleScores.panss||{})[i]==v?'checked':''} onchange="if(!scaleScores.panss)scaleScores.panss={};scaleScores.panss[${i}]=${v};document.getElementById('scaleContent').innerHTML=window.renderPANSS()">
+            <input type="radio" name="panss_${i}" value="${v}" ${scores[i]==v?'checked':''} onchange="setScaleScore('panss',${i},${v})">
             <span>${v}</span>
           </label>`).join('')}
       </div>
     </div>`).join('')}
-    <div style="text-align:right;margin-top:1rem"><button class="btn btn-primary" onclick="toast('PANSS salvo!','success')">Salvar Escala</button></div>`;
+    <div style="text-align:right;margin-top:1rem"><button class="btn btn-primary" onclick="saveScale('panss')">Salvar Escala</button></div>`;
 }
-window.renderHamScale=renderHamScale;
-window.renderGAF=renderGAF;
-window.renderPANSS=renderPANSS;
 
 // ===================== DIAGNÓSTICO =====================
 const CID10_OPTS=[
@@ -891,8 +1151,12 @@ const CID10_OPTS=[
 ];
 
 function renderDiagnostico(container){
-  const diags=state.diagnosticos||[];
-  container.innerHTML=`
+  if(!renderPatientCtxBar(container))return;
+  const p=getPatient();
+  if(!p.diagnosticos)p.diagnosticos=[];
+  const diags=p.diagnosticos;
+  const div=document.createElement('div');
+  div.innerHTML=`
     <div class="content-head"><h2 class="content-title">Diagnóstico</h2></div>
     <div class="section-panel"><div style="padding:1.5rem">
       <div class="section-panel-title">Diagnóstico Principal (CID-10)</div>
@@ -937,6 +1201,7 @@ function renderDiagnostico(container){
         </button>
       </div>
     </div></div>`;
+  while(div.firstChild)container.appendChild(div.firstChild);
 }
 
 function addComorbidade(){
@@ -956,20 +1221,27 @@ function removeComorbidade(i){const el=document.getElementById('com_'+i);if(el)e
 function updateComorbidade(i,v){}
 function updateDiagDesc(){}
 function saveDiagnostico(){
+  const p=getPatient();if(!p){toast('Selecione um paciente.','error');return;}
   const cid=document.getElementById('diag_cid').value;
   const dsm=document.getElementById('diag_dsm').value;
   const notas=document.getElementById('diag_notas').value;
   const esp=document.getElementById('diag_esp').value;
   if(!cid){toast('Selecione um código CID-10.','error');return;}
-  state.diagnosticos=[{cid,dsm,esp,notas}];
+  p.diagnosticos=[{cid,dsm,esp,notas}];
+  p.cid=cid;
+  addAuditEntry(`Diagnóstico atualizado — ${p.nome} — ${cid}`);
   saveState();
   toast('Diagnóstico salvo com sucesso!');
 }
 
 // ===================== PTS =====================
 function renderPTS(container){
-  const pts=state.pts;
-  container.innerHTML=`
+  if(!renderPatientCtxBar(container))return;
+  const p=getPatient();
+  if(!p.pts)p.pts=defaultPTS();
+  const pts=p.pts;
+  const div=document.createElement('div');
+  div.innerHTML=`
     <div class="content-head"><h2 class="content-title">Plano Terapêutico Singular</h2></div>
     <div class="section-panel"><div style="padding:1.5rem">
       <div class="section-panel-title">Metas Terapêuticas</div>
@@ -977,7 +1249,7 @@ function renderPTS(container){
         ${(pts.metas||[]).map((m,i)=>`
         <div class="goal-item" id="meta_${i}">
           <div class="goal-text">${m.texto}</div>
-          <select class="form-select" style="width:180px" onchange="state.pts.metas[${i}].status=this.value">
+          <select class="form-select" style="width:180px" onchange="getPatient().pts.metas[${i}].status=this.value">
             ${['Em andamento','Concluído','Suspenso'].map(s=>`<option ${m.status===s?'selected':''}>${s}</option>`).join('')}
           </select>
           <button class="btn btn-danger btn-sm" onclick="removeMeta(${i})">−</button>
@@ -1022,9 +1294,9 @@ function renderPTS(container){
       <div id="medsList">
         ${(pts.medicamentos||[]).map((m,i)=>`
         <div class="pts-row" id="med_${i}">
-          <input class="form-input" value="${m.nome}" placeholder="Medicamento" style="flex:2" onchange="state.pts.medicamentos[${i}].nome=this.value">
-          <input class="form-input" value="${m.dose}" placeholder="Dose" style="flex:1" onchange="state.pts.medicamentos[${i}].dose=this.value">
-          <input class="form-input" value="${m.freq}" placeholder="Frequência" style="flex:1" onchange="state.pts.medicamentos[${i}].freq=this.value">
+          <input class="form-input" value="${m.nome}" placeholder="Medicamento" style="flex:2" onchange="getPatient().pts.medicamentos[${i}].nome=this.value">
+          <input class="form-input" value="${m.dose}" placeholder="Dose" style="flex:1" onchange="getPatient().pts.medicamentos[${i}].dose=this.value">
+          <input class="form-input" value="${m.freq}" placeholder="Frequência" style="flex:1" onchange="getPatient().pts.medicamentos[${i}].freq=this.value">
           <button class="btn btn-danger btn-sm" onclick="removeMed(${i})">−</button>
         </div>`).join('')}
       </div>
@@ -1036,28 +1308,33 @@ function renderPTS(container){
         ${icon('<path d="M20 6 9 17l-5-5"></path>')} Salvar PTS
       </button>
     </div>`;
+  while(div.firstChild)container.appendChild(div.firstChild);
 }
 
 function addMeta(){
+  const p=getPatient();if(!p)return;
   const inp=document.getElementById('novaMeta');
   if(!inp.value.trim())return;
-  if(!state.pts.metas)state.pts.metas=[];
-  state.pts.metas.push({texto:inp.value.trim(),status:'Em andamento'});
+  if(!p.pts.metas)p.pts.metas=[];
+  p.pts.metas.push({texto:inp.value.trim(),status:'Em andamento'});
   inp.value='';
   renderSection();
 }
-function removeMeta(i){state.pts.metas.splice(i,1);renderSection();}
+function removeMeta(i){const p=getPatient();if(!p)return;p.pts.metas.splice(i,1);renderSection();}
 function addMed(){
-  if(!state.pts.medicamentos)state.pts.medicamentos=[];
-  state.pts.medicamentos.push({nome:'',dose:'',freq:''});
+  const p=getPatient();if(!p)return;
+  if(!p.pts.medicamentos)p.pts.medicamentos=[];
+  p.pts.medicamentos.push({nome:'',dose:'',freq:''});
   renderSection();
 }
-function removeMed(i){state.pts.medicamentos.splice(i,1);renderSection();}
+function removeMed(i){const p=getPatient();if(!p)return;p.pts.medicamentos.splice(i,1);renderSection();}
 function savePTS(){
-  state.pts.terapia=document.getElementById('pts_terapia')?.value||'';
-  state.pts.freq=document.getElementById('pts_freq')?.value||'';
-  state.pts.modal=document.getElementById('pts_modal')?.value||'';
-  state.pts.proximaConsulta=document.getElementById('pts_proxconsulta')?.value||'';
+  const p=getPatient();if(!p){toast('Selecione um paciente.','error');return;}
+  p.pts.terapia=document.getElementById('pts_terapia')?.value||'';
+  p.pts.freq=document.getElementById('pts_freq')?.value||'';
+  p.pts.modal=document.getElementById('pts_modal')?.value||'';
+  p.pts.proximaConsulta=document.getElementById('pts_proxconsulta')?.value||'';
+  addAuditEntry(`PTS salvo — ${p.nome}`);
   saveState();
   toast('PTS salvo com sucesso!');
 }
@@ -1134,9 +1411,14 @@ CRM: _____________`
 };
 
 function renderRelatorios(container){
-  container.innerHTML=`
+  renderPatientCtxBar(container);
+  const div=document.createElement('div');
+  div.innerHTML=`
     <div class="content-head">
       <h2 class="content-title">Relatórios e Laudos</h2>
+      <button class="btn btn-success" onclick="fillReportWithPatient()">
+        ${icon('<path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="9" x2="15" y1="13" y2="13"></line>')} Preencher com Paciente
+      </button>
       <button class="btn btn-primary" onclick="toast('PDF gerado com sucesso!','success')">
         ${icon('<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" x2="12" y1="15" y2="3"></line>')} Gerar PDF
       </button>
@@ -1157,6 +1439,34 @@ function renderRelatorios(container){
       <div class="section-panel-title">Prévia do Documento (editável)</div>
       <textarea class="report-preview" id="reportPreview">${REPORT_TEMPLATES.laudo}</textarea>
     </div></div>`;
+  while(div.firstChild)container.appendChild(div.firstChild);
+}
+
+function fillReportWithPatient(){
+  const p=getPatient();
+  if(!p){toast('Selecione um paciente primeiro (vá em Anamnese).','error');return;}
+  const el=document.getElementById('reportPreview');if(!el)return;
+  const age=calcAge(p.nascimento);
+  const today=fmtDate(new Date().toISOString().split('T')[0]);
+  const diag=(p.diagnosticos&&p.diagnosticos[0])||{};
+  const pts=p.pts||{};
+  let t=el.value;
+  t=t.replace(/Nome: _{5,}/g,`Nome: ${p.nome}`);
+  t=t.replace(/PACIENTE: _{5,}/g,`PACIENTE: ${p.nome}`);
+  t=t.replace(/Data de Nascimento: _{5,}/g,`Data de Nascimento: ${fmtDate(p.nascimento)}`);
+  t=t.replace(/Idade: _{3,} anos/g,`Idade: ${age} anos`);
+  t=t.replace(/Sexo: _{5,}/g,`Sexo: ${p.sexo}`);
+  t=t.replace(/Código CID-10: _{3,}/g,`Código CID-10: ${p.cid||'—'}`);
+  t=t.replace(/Diagnóstico: _{5,}/g,`Diagnóstico: ${diag.dsm||p.cid||'—'}`);
+  t=t.replace(/DIAGNÓSTICO DE INTERNAÇÃO: _{5,}/g,`DIAGNÓSTICO DE INTERNAÇÃO: ${p.cid||'—'}`);
+  t=t.replace(/DIAGNÓSTICO DE ALTA: _{5,}/g,`DIAGNÓSTICO DE ALTA: ${p.cid||'—'}`);
+  t=t.replace(/Medicações: _{5,}/g,`Medicações: ${p.medicacoes||'—'}`);
+  t=t.replace(/Psicoterapia: _{5,}/g,`Psicoterapia: ${pts.terapia||'—'}`);
+  t=t.replace(/Sr\.\(a\) _{5,}/g,`Sr.(a) ${p.nome}`);
+  t=t.replace(/paciente _{10,}/g,`paciente ${p.nome}`);
+  t=t.replace(/, ___\/___\/______/g,`, ${today}`);
+  el.value=t;
+  toast('Documento preenchido com dados do paciente!','success');
 }
 
 function selectTemplate(key,btn){
